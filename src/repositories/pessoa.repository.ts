@@ -15,3 +15,14 @@ export const createPessoa = async (
 ): Promise<Pessoa> => {
   return prisma.pessoa.create({ data });
 };
+
+export const deletePessoa = async (id: number): Promise<Pessoa> => {
+  return prisma.pessoa.delete({ where: { id } });
+};
+
+export const updatePessoa = async (
+  id: number,
+  data: Partial<Pessoa>
+): Promise<Pessoa> => {
+  return prisma.pessoa.update({ where: { id }, data });
+};

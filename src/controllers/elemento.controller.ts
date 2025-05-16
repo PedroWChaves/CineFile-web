@@ -30,3 +30,29 @@ export const createElementoController = async (req: Request, res: Response) => {
   });
   res.status(201).json(newElemento);
 };
+
+export const deleteElementoController = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const elemento = await elementoRepository.getElementoById(id);
+  if (elemento) {
+    const deletedElemento = await elementoRepository.deleteElemento(id);
+    res.json(deletedElemento);
+  } else {
+    res.status(404).json({ message: "Elemento not found" });
+  }
+};
+
+export const updateElementoController = async (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const { titulo, idDiretorioPai } = req.body;
+  const elemento = await elementoRepository.getElementoById(id);
+  if (elemento) {
+    const newElemento = await elementoRepository.updateElemento(id, {
+      titulo: titulo || elemento.titulo,
+      idDiretorioPai: idDiretorioPai || elemento.idDiretorioPai,
+    });
+    res.json(newElemento);
+  } else {
+    res.status(404).json({ message: "Elemento not found" });
+  }
+};

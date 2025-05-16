@@ -1,4 +1,5 @@
 import { PrismaClient } from "../generated/prisma";
+import argon2 from "argon2";
 
 const prisma = new PrismaClient();
 
@@ -212,11 +213,12 @@ async function main() {
   });
 
   // cria usuario
+  const senhaHash = await argon2.hash("senha321");
   const user1 = await prisma.usuario.create({
     data: {
-      email: "pedrodilua@unifei.edu.br",
+      email: "pedrodiluca@unifei.edu.br",
       nome: "Pedro di Luca",
-      senha: "senha123",
+      senha: senhaHash,
     },
   });
 
