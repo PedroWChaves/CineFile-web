@@ -30,7 +30,7 @@
  *       tags: [Obras]
  *       summary: Busca uma obra por ID
  *       parameters:
- *           name: id
+ *         - name: id
  *           in: path
  *           required: true
  *           schema:
@@ -48,11 +48,17 @@
  *       tags: [Obras]
  *       summary: Atualiza as informações de uma obra
  *       parameters:
- *           name: id
+ *         - name: id
  *           in: path
  *           required: true
  *           schema:
  *               type: integer
+ *       requestBody:
+ *           required: true
+ *           content:
+ *               application/json:
+ *                   schema:
+ *                       $ref: '#/components/schemas/ObraInput'
  *       responses:
  *           200:
  *               description: Obra atualizada
@@ -66,7 +72,7 @@
  *       tags: [Obras]
  *       summary: Exclui uma obra
  *       parameters:
- *           name: id
+ *         - name: id
  *           in: path
  *           required: true
  *           schema:
@@ -92,7 +98,9 @@
  *               pais:
  *                   type: string
  *               generos:
- *                   type: string[]
+ *                   type: array
+ *                   items:
+ *                      type: string
  *               lancamento:
  *                   type: DateTime
  *               sinopse:
@@ -117,7 +125,9 @@
  *               pais:
  *                   type: string
  *               generos:
- *                   type: string[]
+ *                   type: array
+ *                   items:
+ *                      type: string
  *               lancamento:
  *                   type: DateTime
  *               sinopse:

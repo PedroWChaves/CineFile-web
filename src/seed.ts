@@ -355,19 +355,17 @@ main()
   "idDiretorioPai": 2
 }
 
-
 {
-  "id": 6,
-  "idElemento": 10,
+  "idElemento": 11,
   "pais": "Nova Zelândia",
   "generos": [
-    "aventura",
+    "aventura"
   ],
   "lancamento": "2002-12-18T00:00:00.000Z",
   "sinopse": "A sociedade está quebrada, mas a batalha pela Terra-média continua enquanto Frodo e Sam seguem para Mordor.",
   "idDiretor": 4,
   "tipo": "FILME",
   "duracao": 179,
-  "oscar": true,
+  "oscar": true
 }
   */
