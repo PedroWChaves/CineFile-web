@@ -1,3 +1,7 @@
+/generated
+/volumes
+
+
 # Logs
 logs
 *.log

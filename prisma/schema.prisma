@@ -1,0 +1,114 @@
+// This is your Prisma schema file,
+// learn more about it in the docs https//pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate https//pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Elemento {
+  id Int @id @default(autoincrement()) 
+  titulo String
+  obra Obra? @relation("elementoObra")
+  diretorio Diretorio? @relation("elementoDiretorio")
+  idDiretorioPai Int?
+  diretorioPai Diretorio? @relation("elementoDiretorioPai", fields: [idDiretorioPai], references: [id])
+}
+
+model Diretorio {
+  id Int @id @default(autoincrement())
+  idElemento Int @unique
+  elemento Elemento @relation("elementoDiretorio", fields: [idElemento], references: [id])
+  elementos Elemento[] @relation("elementoDiretorioPai")
+}
+
+enum ObraType {
+  FILME
+  SERIE
+}
+
+model Obra {
+  id Int @id @default(autoincrement())
+  idElemento Int @unique
+  elemento Elemento @relation("elementoObra", fields: [idElemento], references: [id])
+  pais String
+  generos String[]
+  lancamento DateTime
+  sinopse String
+  atores ObraAtor[]
+  avaliacoes Avaliacao[] @relation("avaliacaoObra")
+  idDiretor Int 
+  diretor Pessoa @relation("obraDiretor", fields: [idDiretor], references: [id])
+  tipo ObraType
+  duracao Int?
+  oscar Boolean?
+  emProducao Boolean?
+  temporadas Temporada[] @relation("serieTemporada")
+}
+
+model ObraAtor {
+  idObra Int
+  idAtor Int
+  obra Obra @relation(fields: [idObra], references: [id])
+  ator Pessoa @relation(fields: [idAtor], references: [id])
+  @@id([idObra, idAtor])
+  @@map("ObraAtor")
+}
+
+model Temporada {
+  id Int @id @default(autoincrement())
+  episodios Episodio[] @relation("temporadaEpisodio")
+  idSerie Int
+  serie Obra @relation("serieTemporada", fields: [idSerie], references: [id])
+}
+
+model Episodio {
+  id Int @id @default(autoincrement())
+  idTemporada Int
+  temporada Temporada @relation("temporadaEpisodio", fields: [idTemporada], references: [id])
+  titulo String
+  duracao Int
+}
+
+enum PessoaType {
+  ATOR
+  DIRETOR
+}
+
+model Pessoa {
+  id Int @id @default(autoincrement())
+  nome String
+  nascimento DateTime
+  pais String
+  tipo PessoaType
+  premiacoes String[]
+  direcoes Obra[] @relation("obraDiretor")
+  biografia String?
+  atuacoes ObraAtor[]
+}
+
+model Usuario {
+  email String @id
+  nome String
+  senha String
+  avaliacoes Avaliacao[] @relation("usuarioAvaliacao")
+}
+
+model Avaliacao {
+  id Int @id @default(autoincrement())
+  nota Int
+  comentario String
+  data DateTime
+  emailUsuario String
+  usuario Usuario @relation("usuarioAvaliacao", fields: [emailUsuario], references: [email])
+  idObra Int
+  obra Obra @relation("avaliacaoObra", fields: [idObra], references: [id])
+}
