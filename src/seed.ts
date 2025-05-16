@@ -6,11 +6,10 @@ const prisma = new PrismaClient();
 async function main() {
   console.log("Iniciando o seed...");
 
-  // cria elemento e diretorio root, filmes e series
+  // cria diretorios root, filmes, mcu e series
   const root = await prisma.elemento.create({
-    data: { titulo: "raiz" },
+    data: { titulo: "Raiz" },
   });
-
   const diretorioRoot = await prisma.diretorio.create({
     data: { idElemento: root.id },
   });
@@ -18,15 +17,20 @@ async function main() {
   const filmes = await prisma.elemento.create({
     data: { titulo: "Filmes", idDiretorioPai: diretorioRoot.id },
   });
-
   const diretorioFilmes = await prisma.diretorio.create({
     data: { idElemento: filmes.id },
+  });
+
+  const mcu = await prisma.elemento.create({
+    data: { titulo: "MCU", idDiretorioPai: diretorioFilmes.id },
+  });
+  const diretorioMCU = await prisma.diretorio.create({
+    data: { idElemento: mcu.id },
   });
 
   const series = await prisma.elemento.create({
     data: { titulo: "Series", idDiretorioPai: diretorioRoot.id },
   });
-
   const diretorioSeries = await prisma.diretorio.create({
     data: { idElemento: series.id },
   });
@@ -35,81 +39,150 @@ async function main() {
   const pessoa1 = await prisma.pessoa.create({
     data: {
       tipo: "DIRETOR",
-      nome: "Peter Jackson",
-      pais: "Nova Zelândia",
-      nascimento: new Date("1961-10-31"),
-      premiacoes: ["Oscar melhor filme", "Oscar melhor direção"],
+      nome: "Christopher Nolan",
+      pais: "Reino Unido",
+      nascimento: new Date("1970-07-30"),
+      premiacoes: [
+        "Oscar de Melhor Direção (indicação)",
+        "Globo de Ouro de Melhor Diretor (indicação)",
+      ],
     },
   });
 
   const pessoa2 = await prisma.pessoa.create({
     data: {
       tipo: "DIRETOR",
-      nome: "Hayao Miyazaki",
-      pais: "Japão",
-      nascimento: new Date("1941-01-05"),
-      premiacoes: ["Oscar melhor filme de animação"],
+      nome: "Anthony Russo",
+      pais: "Estados Unidos",
+      nascimento: new Date("1970-02-03"),
+      premiacoes: ["People's Choice Award de Filme Favorito"],
     },
   });
 
-  // cria atores
   const pessoa3 = await prisma.pessoa.create({
     data: {
-      tipo: "ATOR",
-      nome: "Ian McKellen",
-      pais: "Reino Unido",
-      nascimento: new Date("1931-05-25"),
-      biografia: "Atuou como Gandalf e Magneto",
+      tipo: "DIRETOR",
+      nome: "Matt Shakman",
+      pais: "Estados Unidos",
+      nascimento: new Date("1975-08-08"),
+      premiacoes: ["Emmy de Melhor Direção em Série de Drama (indicação)"],
     },
   });
 
   const pessoa4 = await prisma.pessoa.create({
     data: {
+      tipo: "DIRETOR",
+      nome: "Greta Gerwig",
+      pais: "Estados Unidos",
+      nascimento: new Date("1983-08-04"),
+      premiacoes: ["Indicação ao Oscar de Melhor Direção por 'Lady Bird'"],
+    },
+  });
+
+  // cria atores
+  const pessoa5 = await prisma.pessoa.create({
+    data: {
+      tipo: "ATOR",
+      nome: "Cillian Murphy",
+      pais: "Irlanda",
+      nascimento: new Date("1976-05-25"),
+      biografia: "Conhecido por seu papel como J. Robert Oppenheimer",
+    },
+  });
+
+  const pessoa6 = await prisma.pessoa.create({
+    data: {
+      tipo: "ATOR",
+      nome: "Robert Downey Jr.",
+      pais: "Estados Unidos",
+      nascimento: new Date("1965-04-04"),
+      biografia: "Famoso por interpretar Tony Stark no MCU",
+    },
+  });
+
+  const pessoa7 = await prisma.pessoa.create({
+    data: {
       tipo: "ATOR",
       nome: "Elizabeth Olsen",
-      pais: "EUA",
+      pais: "Estados Unidos",
       nascimento: new Date("1989-02-16"),
-      biografia: "Mais conhecida pelo papel de Wanda no MCU",
+      biografia: "Ganhou destaque como Feiticeira Escarlate no MCU",
+    },
+  });
+
+  const pessoa8 = await prisma.pessoa.create({
+    data: {
+      tipo: "ATOR",
+      nome: "Margot Robbie",
+      pais: "Austrália",
+      nascimento: new Date("1990-07-02"),
+      biografia:
+        "Atriz australiana conhecida por seus papéis em 'O Lobo de Wall Street', 'Eu, Tonya', 'Esquadrão Suicida' e 'Barbie'.",
     },
   });
 
   // cria filmes
-  const senhorDosAneis = await prisma.elemento.create({
+  const vingadoresGuerraInfinita = await prisma.elemento.create({
     data: {
-      titulo: "O senhor dos Aneis",
-      idDiretorioPai: diretorioFilmes.idElemento,
+      titulo: "Vingadores: Guerra Infinita",
+      idDiretorioPai: diretorioMCU.id,
     },
   });
 
   const obra1 = await prisma.obra.create({
     data: {
       tipo: "FILME",
-      idElemento: senhorDosAneis.id,
-      idDiretor: pessoa1.id,
-      lancamento: new Date("2002-01-01"),
-      pais: pessoa1.pais,
-      sinopse: "Baseado na história de JRR Tolkien",
-      duracao: 178,
-      oscar: true,
+      idElemento: vingadoresGuerraInfinita.id,
+      idDiretor: pessoa2.id,
+      generos: ["super-heroi", "ação"],
+      lancamento: new Date("2018-04-23"),
+      pais: pessoa2.pais,
+      sinopse:
+        "Os Vingadores e seus aliados tentam impedir Thanos de reunir as Joias do Infinito.",
+      duracao: 149,
+      oscar: false,
     },
   });
 
-  const vingadores2 = await prisma.elemento.create({
+  const oppenheimer = await prisma.elemento.create({
     data: {
-      titulo: "Vingadores: Era de Ultron",
-      idDiretorioPai: diretorioFilmes.idElemento,
+      titulo: "Oppenheimer",
+      idDiretorioPai: diretorioFilmes.id,
     },
   });
 
   const obra2 = await prisma.obra.create({
     data: {
       tipo: "FILME",
-      idElemento: vingadores2.id,
+      idElemento: oppenheimer.id,
       idDiretor: pessoa1.id,
-      lancamento: new Date("2015-04-23"),
-      pais: "EUA",
-      sinopse: "Segundo filme dos Vingadores no MCU",
-      duracao: 141,
+      generos: ["drama"],
+      lancamento: new Date("2023-07-21"),
+      pais: pessoa1.pais,
+      sinopse:
+        "A história de J. Robert Oppenheimer e seu papel na criação da bomba atômica.",
+      duracao: 180,
+      oscar: true,
+    },
+  });
+
+  const barbie = await prisma.elemento.create({
+    data: {
+      titulo: "Barbie",
+      idDiretorioPai: diretorioFilmes.id,
+    },
+  });
+
+  const obra3 = await prisma.obra.create({
+    data: {
+      tipo: "FILME",
+      idElemento: barbie.id,
+      idDiretor: pessoa4.id,
+      generos: ["drama"],
+      lancamento: new Date("2023-07-21"),
+      pais: pessoa4.pais,
+      sinopse: "Barbie embarca em uma jornada de autodescoberta no mundo real.",
+      duracao: 114,
       oscar: false,
     },
   });
@@ -122,21 +195,23 @@ async function main() {
     },
   });
 
-  const obra3 = await prisma.obra.create({
+  const obra4 = await prisma.obra.create({
     data: {
       tipo: "SERIE",
       idElemento: wandavision.id,
-      idDiretor: pessoa2.id,
+      idDiretor: pessoa3.id,
+      generos: ["super-heroi", "ação"],
       lancamento: new Date("2021-01-15"),
-      pais: "EUA",
-      sinopse: "Wanda, Visão e os filhinhos",
+      pais: pessoa3.pais,
+      sinopse:
+        "Wanda Maximoff e Visão vivem uma vida suburbana ideal até que a realidade começa a se desfazer.",
       emProducao: false,
     },
   });
 
   const temporada1 = await prisma.temporada.create({
     data: {
-      idSerie: obra3.id,
+      idSerie: obra4.id,
     },
   });
 
@@ -163,11 +238,12 @@ async function main() {
     },
   });
 
-  const obra4 = await prisma.obra.create({
+  const obra5 = await prisma.obra.create({
     data: {
       tipo: "SERIE",
       idElemento: doctorwho.id,
       idDiretor: pessoa1.id,
+      generos: ["sci-fi"],
       lancamento: new Date("1963-11-23"),
       pais: "Reino Unido",
       sinopse: "Viagem no tempo, cabine telefônica e chave de fenda sônica",
@@ -177,7 +253,7 @@ async function main() {
 
   const temporada2 = await prisma.temporada.create({
     data: {
-      idSerie: obra4.id,
+      idSerie: obra5.id,
     },
   });
 
@@ -191,7 +267,7 @@ async function main() {
 
   const temporada3 = await prisma.temporada.create({
     data: {
-      idSerie: obra4.id,
+      idSerie: obra5.id,
     },
   });
 
@@ -205,10 +281,19 @@ async function main() {
 
   const obraAtor = await prisma.obraAtor.createMany({
     data: [
-      { idAtor: pessoa3.id, idObra: obra1.id },
-      { idAtor: pessoa3.id, idObra: obra4.id },
-      { idAtor: pessoa4.id, idObra: obra2.id },
-      { idAtor: pessoa4.id, idObra: obra3.id },
+      // Vingadores: Guerra Infinita
+      { idAtor: pessoa6.id, idObra: obra1.id }, // Robert Downey Jr.
+      { idAtor: pessoa7.id, idObra: obra1.id }, // Elizabeth Olsen
+
+      // Oppenheimer
+      { idAtor: pessoa5.id, idObra: obra2.id }, // Cillian Murphy
+      { idAtor: pessoa6.id, idObra: obra2.id }, // Robert Downey Jr.
+
+      // Barbie
+      { idAtor: pessoa8.id, idObra: obra3.id }, // Margot Robbie
+
+      // WandaVision
+      { idAtor: pessoa7.id, idObra: obra4.id }, // Elizabeth Olsen
     ],
   });
 
@@ -227,13 +312,13 @@ async function main() {
     data: [
       {
         idObra: obra1.id,
-        comentario: "A versão estendida é muito boa!",
+        comentario: "O Thor deveria ter mirado na cabeça...",
         data: new Date("2010-07-05"),
         emailUsuario: user1.email,
         nota: 9,
       },
       {
-        idObra: obra4.id,
+        idObra: obra5.id,
         comentario: "Minha série favorita! Matt Smith é bom demais",
         data: new Date("2019-06-14"),
         emailUsuario: user1.email,
@@ -252,3 +337,37 @@ main()
     prisma.$disconnect();
     console.log("Seed concluído!");
   });
+
+/*
+{
+  "tipo": "DIRETOR",
+  "nome": "Peter Jackson",
+  "pais": "Nova Zelândia",
+  "nascimento": "1961-10-31T00:00:00.000Z",
+  "premiacoes": [
+    "Oscar de Melhor Direção por 'O Senhor dos Anéis: O Retorno do Rei'",
+    "Oscar de Melhor Filme por 'O Senhor dos Anéis: O Retorno do Rei'"
+  ]
+}
+
+{
+  "titulo": "O Senhor dos Anéis: As Duas Torres",
+  "idDiretorioPai": 2
+}
+
+
+{
+  "id": 6,
+  "idElemento": 10,
+  "pais": "Nova Zelândia",
+  "generos": [
+    "aventura",
+  ],
+  "lancamento": "2002-12-18T00:00:00.000Z",
+  "sinopse": "A sociedade está quebrada, mas a batalha pela Terra-média continua enquanto Frodo e Sam seguem para Mordor.",
+  "idDiretor": 4,
+  "tipo": "FILME",
+  "duracao": 179,
+  "oscar": true,
+}
+  */
